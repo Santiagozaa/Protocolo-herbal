@@ -1,0 +1,2200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Pacientes - Tratamiento Herbal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        /* ===================== */
+        /* PANTALLA DE LOGIN */
+        /* ===================== */
+        .login-screen {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #1a472a 0%, #2e7d32 50%, #4caf50 100%);
+            padding: 20px;
+        }
+        
+        .login-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 420px;
+            overflow: hidden;
+        }
+        
+        .login-header {
+            background: linear-gradient(135deg, #2e7d32, #4caf50);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        
+        .login-header .logo {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+        
+        .login-header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        .login-header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        .login-body {
+            padding: 40px 30px;
+        }
+        
+        .login-tipo {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+        
+        .login-tipo-btn {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            color: #666;
+        }
+        
+        .login-tipo-btn:hover {
+            border-color: #4caf50;
+            color: #4caf50;
+        }
+        
+        .login-tipo-btn.activo {
+            border-color: #4caf50;
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .login-form .campo {
+            margin-bottom: 20px;
+        }
+        
+        .login-form label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #555;
+            font-size: 14px;
+        }
+        
+        .login-form input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: border-color 0.3s;
+        }
+        
+        .login-form input:focus {
+            outline: none;
+            border-color: #4caf50;
+        }
+        
+        .btn-login {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #2e7d32, #4caf50);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(76,175,80,0.4);
+        }
+        
+        .login-error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+        
+        .login-error.visible {
+            display: block;
+        }
+        
+        .login-info {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            font-size: 13px;
+            color: #888;
+            text-align: center;
+        }
+        
+        /* ===================== */
+        /* HEADER */
+        /* ===================== */
+        .header {
+            background: linear-gradient(135deg, #2e7d32, #4caf50);
+            color: white;
+            padding: 20px 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .header-user {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-info {
+            text-align: right;
+        }
+        
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .user-role {
+            font-size: 12px;
+            opacity: 0.8;
+            background: rgba(255,255,255,0.2);
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+        
+        .btn-logout {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-logout:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .btn-nuevo {
+            background: white;
+            color: #2e7d32;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-nuevo:hover {
+            background: #e8f5e9;
+            transform: translateY(-2px);
+        }
+        
+        /* ===================== */
+        /* CONTENIDO PRINCIPAL */
+        /* ===================== */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+        
+        .barra-busqueda {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .barra-busqueda input {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+        
+        .barra-busqueda input:focus {
+            outline: none;
+            border-color: #4caf50;
+        }
+        
+        .estadisticas {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .stat {
+            text-align: center;
+            padding: 10px 20px;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+        
+        .stat-numero {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2e7d32;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        /* ===================== */
+        /* GRID DE PACIENTES */
+        /* ===================== */
+        .pacientes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+        
+        .paciente-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .paciente-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        
+        .paciente-header {
+            padding: 20px;
+            background: linear-gradient(135deg, #37474f, #546e7a);
+            color: white;
+            position: relative;
+        }
+        
+        .paciente-nombre {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .paciente-fecha {
+            font-size: 13px;
+            opacity: 0.8;
+        }
+        
+        .paciente-credenciales {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 11px;
+            cursor: pointer;
+        }
+        
+        .paciente-credenciales:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .paciente-body {
+            padding: 20px;
+        }
+        
+        .paciente-motivo {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .paciente-progreso {
+            margin-bottom: 15px;
+        }
+        
+        .progreso-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+        
+        .progreso-barra {
+            background: #e0e0e0;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progreso-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4caf50, #8bc34a);
+            border-radius: 4px;
+            transition: width 0.5s;
+        }
+        
+        .paciente-fases {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .fase-indicador {
+            flex: 1;
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 3px;
+        }
+        
+        .fase-indicador.activa {
+            background: #ffc107;
+        }
+        
+        .fase-indicador.completada {
+            background: #4caf50;
+        }
+        
+        .paciente-acciones {
+            display: flex;
+            gap: 10px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        .btn-accion {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-abrir {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .btn-abrir:hover {
+            background: #c8e6c9;
+        }
+        
+        .btn-eliminar {
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        .btn-eliminar:hover {
+            background: #ffcdd2;
+        }
+        
+        /* ===================== */
+        /* ESTADO VACÍO */
+        /* ===================== */
+        .estado-vacio {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .estado-vacio-icono {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+        
+        .estado-vacio h2 {
+            color: #555;
+            margin-bottom: 10px;
+        }
+        
+        .estado-vacio p {
+            color: #888;
+            margin-bottom: 25px;
+        }
+        
+        /* ===================== */
+        /* MODALES */
+        /* ===================== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+        
+        .modal-overlay.visible {
+            display: flex;
+        }
+        
+        .modal {
+            background: white;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        
+        .modal-header {
+            padding: 20px 25px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h2 {
+            font-size: 20px;
+            color: #333;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #888;
+            line-height: 1;
+        }
+        
+        .modal-close:hover {
+            color: #333;
+        }
+        
+        .modal-body {
+            padding: 25px;
+        }
+        
+        .form-grupo {
+            margin-bottom: 20px;
+        }
+        
+        .form-grupo label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #555;
+        }
+        
+        .form-grupo input,
+        .form-grupo textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: inherit;
+        }
+        
+        .form-grupo input:focus,
+        .form-grupo textarea:focus {
+            outline: none;
+            border-color: #4caf50;
+        }
+        
+        .credenciales-box {
+            background: #fff8e1;
+            border: 1px solid #ffca28;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        
+        .credenciales-box h4 {
+            color: #f57c00;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        .credenciales-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px dashed #ffe082;
+            font-size: 14px;
+        }
+        
+        .credenciales-item:last-child {
+            border-bottom: none;
+        }
+        
+        .credenciales-item strong {
+            color: #555;
+        }
+        
+        .credenciales-item span {
+            font-family: monospace;
+            background: #fff;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        
+        .modal-footer {
+            padding: 20px 25px;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+        
+        .btn-modal {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-cancelar {
+            background: #f5f5f5;
+            color: #666;
+        }
+        
+        .btn-cancelar:hover {
+            background: #e0e0e0;
+        }
+        
+        .btn-guardar {
+            background: #4caf50;
+            color: white;
+        }
+        
+        .btn-guardar:hover {
+            background: #388e3c;
+        }
+        
+        /* ===================== */
+        /* VISTA DE PLAN */
+        /* ===================== */
+        .vista-plan {
+            display: none;
+        }
+        
+        .vista-plan.visible {
+            display: block;
+        }
+        
+        .vista-lista {
+            display: block;
+        }
+        
+        .vista-lista.oculta {
+            display: none;
+        }
+        
+        .app-container {
+            display: none;
+        }
+        
+        .app-container.visible {
+            display: block;
+        }
+        
+        .btn-volver {
+            background: #f5f5f5;
+            color: #555;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-volver:hover {
+            background: #e0e0e0;
+        }
+        
+        /* Modo lectura */
+        .modo-lectura .btn-agregar,
+        .modo-lectura .btn-eliminar-small,
+        .modo-lectura .btn-eliminar,
+        .modo-lectura .botones-plan,
+        .modo-lectura .paciente-acciones {
+            display: none !important;
+        }
+        
+        .modo-lectura input,
+        .modo-lectura textarea {
+            background: #f9f9f9;
+            border-color: #eee;
+            pointer-events: none;
+        }
+        
+        .modo-lectura .progreso-item {
+            pointer-events: none;
+        }
+        
+        .badge-lectura {
+            background: #ff9800;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 15px;
+        }
+        
+        /* ===================== */
+        /* MENSAJE TOAST */
+        /* ===================== */
+        .mensaje-toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #333;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s;
+            z-index: 1001;
+        }
+        
+        .mensaje-toast.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .mensaje-toast.exito {
+            background: #4caf50;
+        }
+        
+        .mensaje-toast.error {
+            background: #f44336;
+        }
+        
+        /* ===================== */
+        /* ESTILOS DEL PLAN */
+        /* ===================== */
+        .plan-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .plan-header {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, #2e7d32, #4caf50);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .plan-header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .plan-header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .datos-paciente {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .datos-paciente h2 {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .campo {
+            margin-bottom: 15px;
+        }
+        
+        .campo label {
+            display: block;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        
+        .campo input, .campo textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 15px;
+            transition: border-color 0.3s;
+        }
+        
+        .campo input:focus, .campo textarea:focus {
+            outline: none;
+            border-color: #4caf50;
+        }
+        
+        .progreso-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .progreso-section h3 {
+            text-align: center;
+            color: #555;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        
+        .progreso-barra-main {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .progreso-item {
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            padding: 15px 10px;
+            background: #f0f0f0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        
+        .progreso-item:hover {
+            background: #e8f5e9;
+        }
+        
+        .progreso-item.completado {
+            background: #4caf50;
+            color: white;
+            border-color: #2e7d32;
+        }
+        
+        .progreso-item span {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .progreso-item .porcentaje-mini {
+            font-size: 11px;
+            margin-top: 4px;
+            opacity: 0.8;
+        }
+        
+        .flecha {
+            color: #ccc;
+            font-size: 20px;
+        }
+        
+        /* ACORDEONES */
+        .acordeon {
+            margin-bottom: 15px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .acordeon-header {
+            background: #6d4c41;
+            color: white;
+            padding: 18px 25px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s;
+        }
+        
+        .acordeon-header:hover {
+            filter: brightness(1.1);
+        }
+        
+        .acordeon-header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .acordeon-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .porcentaje-badge {
+            background: rgba(255,255,255,0.25);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .porcentaje-badge.en-progreso {
+            background: rgba(255,193,7,0.9);
+            color: #333;
+        }
+        
+        .porcentaje-badge.completado {
+            background: rgba(76,175,80,0.9);
+            color: white;
+        }
+        
+        .porcentaje-badge.no-iniciado {
+            background: rgba(255,255,255,0.2);
+            color: rgba(255,255,255,0.8);
+        }
+        
+        .acordeon-header .icono {
+            font-size: 24px;
+            transition: transform 0.3s;
+            font-weight: 300;
+        }
+        
+        .acordeon.abierto .acordeon-header .icono {
+            transform: rotate(45deg);
+        }
+        
+        .acordeon-contenido {
+            background: white;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+        }
+        
+        .acordeon.abierto .acordeon-contenido {
+            max-height: 3000px;
+        }
+        
+        .acordeon-inner {
+            padding: 25px;
+        }
+        
+        .progreso-visual {
+            background: #e0e0e0;
+            height: 8px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .progreso-visual-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+            background: linear-gradient(90deg, #4caf50, #8bc34a);
+        }
+        
+        .progreso-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .fase-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .fase-info > div {
+            background: #f9f9f9;
+            padding: 12px 15px;
+            border-radius: 6px;
+        }
+        
+        .fase-info label {
+            font-size: 12px;
+            color: #888;
+            display: block;
+            margin-bottom: 3px;
+        }
+        
+        .fase-info input {
+            border: none;
+            background: transparent;
+            width: 100%;
+            padding: 0;
+            font-size: 15px;
+            font-weight: 500;
+        }
+        
+        .objetivo {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid #6d4c41;
+        }
+        
+        .objetivo strong {
+            color: #555;
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        .objetivo textarea {
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 50px;
+            font-family: inherit;
+        }
+        
+        .hierbas-titulo {
+            font-size: 16px;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 15px;
+        }
+        
+        .hierbas-container {
+            margin-bottom: 15px;
+        }
+        
+        .hierba-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 10px;
+            margin-bottom: 12px;
+            align-items: center;
+        }
+        
+        .hierba-row input {
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .btn-eliminar-small {
+            background: #ffebee;
+            color: #c62828;
+            border: none;
+            border-radius: 6px;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background 0.3s;
+        }
+        
+        .btn-eliminar-small:hover {
+            background: #ffcdd2;
+        }
+        
+        .btn-agregar {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 2px dashed #4caf50;
+            border-radius: 6px;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        
+        .btn-agregar:hover {
+            background: #c8e6c9;
+        }
+        
+        .seccion-extra {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .seccion-extra label {
+            font-weight: 600;
+            color: #555;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .seccion-extra textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 60px;
+            font-family: inherit;
+        }
+        
+        /* Colores por fase */
+        .fase-1 .acordeon-header { background: #6d4c41; }
+        .fase-1 .objetivo { border-left-color: #6d4c41; }
+        .fase-1 .progreso-visual-fill { background: linear-gradient(90deg, #6d4c41, #8d6e63); }
+        
+        .fase-2 .acordeon-header { background: #558b2f; }
+        .fase-2 .objetivo { border-left-color: #558b2f; }
+        .fase-2 .progreso-visual-fill { background: linear-gradient(90deg, #558b2f, #7cb342); }
+        
+        .fase-3 .acordeon-header { background: #37474f; }
+        .fase-3 .objetivo { border-left-color: #37474f; }
+        .fase-3 .progreso-visual-fill { background: linear-gradient(90deg, #37474f, #546e7a); }
+        
+        .fase-4 .acordeon-header { background: #5d4037; }
+        .fase-4 .objetivo { border-left-color: #5d4037; }
+        .fase-4 .progreso-visual-fill { background: linear-gradient(90deg, #5d4037, #795548); }
+        
+        .recomendaciones {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .recomendaciones h3 {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .recomendaciones-container {
+            margin-bottom: 15px;
+        }
+        
+        .recomendacion-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+        
+        .recomendacion-row input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .recomendacion-bullet {
+            color: #4caf50;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .contacto {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .contacto h3 {
+            grid-column: 1 / -1;
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 5px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .botones-plan {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .btn-plan {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-imprimir {
+            background: #4caf50;
+            color: white;
+        }
+        
+        .btn-imprimir:hover {
+            background: #388e3c;
+        }
+        
+        .btn-guardar-plan {
+            background: #1976d2;
+            color: white;
+        }
+        
+        .btn-guardar-plan:hover {
+            background: #1565c0;
+        }
+        
+        @media print {
+            .header, .btn-volver, .botones-plan, .btn-agregar, .btn-eliminar-small, .login-screen {
+                display: none !important;
+            }
+            .acordeon-contenido {
+                max-height: none !important;
+            }
+            .app-container {
+                display: block !important;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            .fase-info {
+                grid-template-columns: 1fr;
+            }
+            .hierba-row {
+                grid-template-columns: 1fr;
+            }
+            .contacto {
+                grid-template-columns: 1fr;
+            }
+            .progreso-barra-main {
+                flex-direction: column;
+            }
+            .flecha {
+                transform: rotate(90deg);
+            }
+            .login-tipo {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ===================== -->
+    <!-- PANTALLA DE LOGIN -->
+    <!-- ===================== -->
+    <div class="login-screen" id="login-screen">
+        <div class="login-container">
+            <div class="login-header">
+                <div class="logo">🌿</div>
+                <h1>Portal de Tratamiento Herbal</h1>
+                <p>Inicie sesión para continuar</p>
+            </div>
+            <div class="login-body">
+                <div class="login-tipo">
+                    <button class="login-tipo-btn activo" onclick="cambiarTipoLogin('admin')" id="btn-tipo-admin">
+                        👨‍⚕️ Administrador
+                    </button>
+                    <button class="login-tipo-btn" onclick="cambiarTipoLogin('paciente')" id="btn-tipo-paciente">
+                        👤 Paciente
+                    </button>
+                </div>
+                
+                <div class="login-error" id="login-error">
+                    Usuario o contraseña incorrectos
+                </div>
+                
+                <form class="login-form" onsubmit="intentarLogin(event)">
+                    <div class="campo">
+                        <label>Usuario</label>
+                        <input type="text" id="login-usuario" placeholder="Ingrese su usuario" required>
+                    </div>
+                    <div class="campo">
+                        <label>Contraseña</label>
+                        <input type="password" id="login-password" placeholder="Ingrese su contraseña" required>
+                    </div>
+                    <button type="submit" class="btn-login">Iniciar Sesión</button>
+                </form>
+                
+                <div class="login-info" id="login-info-admin">
+                    <strong>Credenciales por defecto:</strong><br>
+                    Usuario: <code>admin</code> | Contraseña: <code>admin123</code>
+                </div>
+                <div class="login-info" id="login-info-paciente" style="display: none;">
+                    Ingrese las credenciales proporcionadas por su profesional
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ===================== -->
+    <!-- APLICACIÓN PRINCIPAL -->
+    <!-- ===================== -->
+    <div class="app-container" id="app-container">
+        <!-- HEADER -->
+        <div class="header">
+            <div class="header-content">
+                <div>
+                    <h1>🌿 Portal de Pacientes</h1>
+                    <p>Gestión de Tratamientos Herbales</p>
+                </div>
+                <div class="header-user">
+                    <div class="user-info">
+                        <div class="user-name" id="header-user-name">Admin</div>
+                        <div class="user-role" id="header-user-role">Administrador</div>
+                    </div>
+                    <button class="btn-nuevo" onclick="abrirModalNuevo()" id="btn-nuevo-paciente">
+                        <span>+</span> Nuevo Paciente
+                    </button>
+                    <button class="btn-logout" onclick="cerrarSesion()">Cerrar Sesión</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- VISTA LISTA DE PACIENTES -->
+        <div class="vista-lista" id="vista-lista">
+            <div class="main-content">
+                <div class="barra-busqueda" id="barra-busqueda">
+                    <input type="text" id="busqueda" placeholder="Buscar paciente..." oninput="filtrarPacientes()">
+                    <div class="estadisticas">
+                        <div class="stat">
+                            <div class="stat-numero" id="total-pacientes">0</div>
+                            <div class="stat-label">Pacientes</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-numero" id="en-tratamiento">0</div>
+                            <div class="stat-label">En tratamiento</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="pacientes-grid" id="pacientes-grid"></div>
+                
+                <div class="estado-vacio" id="estado-vacio" style="display: none;">
+                    <div class="estado-vacio-icono">📋</div>
+                    <h2>No hay pacientes registrados</h2>
+                    <p>Comienza agregando tu primer paciente</p>
+                    <button class="btn-nuevo" onclick="abrirModalNuevo()">
+                        <span>+</span> Agregar Paciente
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- VISTA PLAN INDIVIDUAL -->
+        <div class="vista-plan" id="vista-plan">
+            <div class="main-content">
+                <button class="btn-volver" onclick="volverALista()" id="btn-volver">
+                    ← Volver a la lista
+                </button>
+                
+                <div class="plan-container" id="plan-container"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ===================== -->
+    <!-- MODALES -->
+    <!-- ===================== -->
+    
+    <!-- Modal Nuevo Paciente -->
+    <div class="modal-overlay" id="modal-nuevo">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Nuevo Paciente</h2>
+                <button class="modal-close" onclick="cerrarModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-grupo">
+                    <label>Nombre completo *</label>
+                    <input type="text" id="nuevo-nombre" placeholder="Ingrese el nombre del paciente">
+                </div>
+                <div class="form-grupo">
+                    <label>Fecha de inicio</label>
+                    <input type="date" id="nuevo-fecha">
+                </div>
+                <div class="form-grupo">
+                    <label>Motivo de consulta</label>
+                    <textarea id="nuevo-motivo" rows="3" placeholder="Describa el motivo de consulta"></textarea>
+                </div>
+                
+                <div class="credenciales-box">
+                    <h4>🔐 Credenciales de acceso para el paciente</h4>
+                    <div class="form-grupo" style="margin-bottom: 10px;">
+                        <label style="font-size: 13px;">Usuario</label>
+                        <input type="text" id="nuevo-usuario" placeholder="Ej: juan.perez">
+                    </div>
+                    <div class="form-grupo" style="margin-bottom: 0;">
+                        <label style="font-size: 13px;">Contraseña</label>
+                        <input type="text" id="nuevo-password" placeholder="Mínimo 6 caracteres">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal btn-cancelar" onclick="cerrarModal()">Cancelar</button>
+                <button class="btn-modal btn-guardar" onclick="crearPaciente()">Crear Paciente</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Confirmar Eliminación -->
+    <div class="modal-overlay" id="modal-eliminar">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Eliminar Paciente</h2>
+                <button class="modal-close" onclick="cerrarModalEliminar()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>¿Está seguro que desea eliminar a <strong id="nombre-eliminar"></strong>?</p>
+                <p style="color: #888; margin-top: 10px;">Esta acción no se puede deshacer.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal btn-cancelar" onclick="cerrarModalEliminar()">Cancelar</button>
+                <button class="btn-modal btn-guardar" style="background: #f44336;" onclick="confirmarEliminar()">Eliminar</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Ver Credenciales -->
+    <div class="modal-overlay" id="modal-credenciales">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Credenciales del Paciente</h2>
+                <button class="modal-close" onclick="cerrarModalCredenciales()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: 15px;">Comparta estas credenciales con el paciente para que pueda acceder a su plan:</p>
+                <div class="credenciales-box">
+                    <div class="credenciales-item">
+                        <strong>Usuario:</strong>
+                        <span id="cred-usuario"></span>
+                    </div>
+                    <div class="credenciales-item">
+                        <strong>Contraseña:</strong>
+                        <span id="cred-password"></span>
+                    </div>
+                </div>
+                <p style="margin-top: 15px; font-size: 13px; color: #888;">
+                    El paciente podrá ver su plan en modo lectura (sin editar).
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal btn-guardar" onclick="cerrarModalCredenciales()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- MENSAJE TOAST -->
+    <div class="mensaje-toast" id="mensaje-toast"></div>
+    
+    <script>
+        // =====================
+        // VARIABLES GLOBALES
+        // =====================
+        let pacientes = [];
+        let usuarioActual = null;
+        let pacienteActual = null;
+        let pacienteAEliminar = null;
+        let tipoLoginActual = 'admin';
+        
+        // Credenciales admin por defecto
+        const ADMIN_USER = 'admin';
+        const ADMIN_PASS = 'admin123';
+        
+        // =====================
+        // INICIALIZACIÓN
+        // =====================
+        document.addEventListener('DOMContentLoaded', function() {
+            cargarPacientes();
+            verificarSesion();
+            document.getElementById('nuevo-fecha').value = new Date().toISOString().split('T')[0];
+        });
+        
+        function verificarSesion() {
+            const sesion = localStorage.getItem('sesionActual');
+            if (sesion) {
+                usuarioActual = JSON.parse(sesion);
+                mostrarApp();
+            }
+        }
+        
+        // =====================
+        // LOGIN
+        // =====================
+        function cambiarTipoLogin(tipo) {
+            tipoLoginActual = tipo;
+            document.getElementById('btn-tipo-admin').classList.toggle('activo', tipo === 'admin');
+            document.getElementById('btn-tipo-paciente').classList.toggle('activo', tipo === 'paciente');
+            document.getElementById('login-info-admin').style.display = tipo === 'admin' ? 'block' : 'none';
+            document.getElementById('login-info-paciente').style.display = tipo === 'paciente' ? 'block' : 'none';
+            document.getElementById('login-error').classList.remove('visible');
+        }
+        
+        function intentarLogin(e) {
+            e.preventDefault();
+            
+            const usuario = document.getElementById('login-usuario').value.trim();
+            const password = document.getElementById('login-password').value;
+            
+            if (tipoLoginActual === 'admin') {
+                if (usuario === ADMIN_USER && password === ADMIN_PASS) {
+                    usuarioActual = { tipo: 'admin', nombre: 'Administrador', usuario: ADMIN_USER };
+                    localStorage.setItem('sesionActual', JSON.stringify(usuarioActual));
+                    mostrarApp();
+                    return;
+                }
+            } else {
+                // Buscar paciente
+                const paciente = pacientes.find(p => p.credenciales && p.credenciales.usuario === usuario && p.credenciales.password === password);
+                if (paciente) {
+                    usuarioActual = { tipo: 'paciente', nombre: paciente.nombre, pacienteId: paciente.id };
+                    localStorage.setItem('sesionActual', JSON.stringify(usuarioActual));
+                    mostrarApp();
+                    return;
+                }
+            }
+            
+            document.getElementById('login-error').classList.add('visible');
+        }
+        
+        function cerrarSesion() {
+            usuarioActual = null;
+            pacienteActual = null;
+            localStorage.removeItem('sesionActual');
+            document.getElementById('login-screen').style.display = 'flex';
+            document.getElementById('app-container').classList.remove('visible');
+            document.getElementById('login-usuario').value = '';
+            document.getElementById('login-password').value = '';
+            document.getElementById('login-error').classList.remove('visible');
+        }
+        
+        function mostrarApp() {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('app-container').classList.add('visible');
+            
+            document.getElementById('header-user-name').textContent = usuarioActual.nombre;
+            document.getElementById('header-user-role').textContent = usuarioActual.tipo === 'admin' ? 'Administrador' : 'Paciente';
+            
+            if (usuarioActual.tipo === 'admin') {
+                document.getElementById('btn-nuevo-paciente').style.display = 'flex';
+                document.getElementById('barra-busqueda').style.display = 'flex';
+                document.getElementById('vista-lista').classList.remove('oculta');
+                document.getElementById('vista-plan').classList.remove('visible');
+                renderizarLista();
+            } else {
+                // Paciente: mostrar directamente su plan en modo lectura
+                document.getElementById('btn-nuevo-paciente').style.display = 'none';
+                document.getElementById('barra-busqueda').style.display = 'none';
+                document.getElementById('vista-lista').classList.add('oculta');
+                document.getElementById('vista-plan').classList.add('visible');
+                document.getElementById('btn-volver').style.display = 'none';
+                
+                pacienteActual = pacientes.find(p => p.id === usuarioActual.pacienteId);
+                if (pacienteActual) {
+                    renderizarPlan(true); // true = modo lectura
+                }
+            }
+        }
+        
+        // =====================
+        // GESTIÓN DE DATOS
+        // =====================
+        function cargarPacientes() {
+            const datos = localStorage.getItem('portalPacientes');
+            if (datos) {
+                pacientes = JSON.parse(datos);
+            }
+        }
+        
+        function guardarPacientes() {
+            localStorage.setItem('portalPacientes', JSON.stringify(pacientes));
+        }
+        
+        function mostrarMensaje(texto, tipo = 'exito') {
+            const toast = document.getElementById('mensaje-toast');
+            toast.textContent = texto;
+            toast.className = 'mensaje-toast visible ' + tipo;
+            setTimeout(() => {
+                toast.classList.remove('visible');
+            }, 3000);
+        }
+        
+        // =====================
+        // MODALES
+        // =====================
+        function abrirModalNuevo() {
+            document.getElementById('modal-nuevo').classList.add('visible');
+            document.getElementById('nuevo-nombre').focus();
+            
+            // Generar usuario y contraseña sugeridos
+            const timestamp = Date.now().toString().slice(-4);
+            document.getElementById('nuevo-usuario').value = '';
+            document.getElementById('nuevo-password').value = '';
+        }
+        
+        function cerrarModal() {
+            document.getElementById('modal-nuevo').classList.remove('visible');
+            document.getElementById('nuevo-nombre').value = '';
+            document.getElementById('nuevo-fecha').value = new Date().toISOString().split('T')[0];
+            document.getElementById('nuevo-motivo').value = '';
+            document.getElementById('nuevo-usuario').value = '';
+            document.getElementById('nuevo-password').value = '';
+        }
+        
+        function crearPaciente() {
+            const nombre = document.getElementById('nuevo-nombre').value.trim();
+            const fecha = document.getElementById('nuevo-fecha').value;
+            const motivo = document.getElementById('nuevo-motivo').value.trim();
+            const usuario = document.getElementById('nuevo-usuario').value.trim();
+            const password = document.getElementById('nuevo-password').value;
+            
+            if (!nombre) {
+                mostrarMensaje('Por favor ingrese el nombre del paciente', 'error');
+                return;
+            }
+            
+            if (!usuario || !password) {
+                mostrarMensaje('Por favor ingrese usuario y contraseña para el paciente', 'error');
+                return;
+            }
+            
+            if (password.length < 6) {
+                mostrarMensaje('La contraseña debe tener al menos 6 caracteres', 'error');
+                return;
+            }
+            
+            // Verificar que el usuario no exista
+            if (pacientes.some(p => p.credenciales && p.credenciales.usuario === usuario)) {
+                mostrarMensaje('El usuario ya existe, elija otro', 'error');
+                return;
+            }
+            
+            const nuevoPaciente = {
+                id: Date.now().toString(),
+                nombre: nombre,
+                fechaInicio: fecha,
+                motivo: motivo,
+                fechaCreacion: new Date().toISOString(),
+                credenciales: {
+                    usuario: usuario,
+                    password: password
+                },
+                plan: crearPlanVacio()
+            };
+            
+            pacientes.push(nuevoPaciente);
+            guardarPacientes();
+            cerrarModal();
+            renderizarLista();
+            mostrarMensaje('Paciente creado exitosamente');
+        }
+        
+        function crearPlanVacio() {
+            return {
+                fases: {
+                    1: { objetivo: 'Eliminar toxinas y limpiar el sistema digestivo, hígado, riñones y piel.', duracion: 60, fechaInicio: '', fechaFin: '', estado: 'Pendiente', observaciones: '', resultado: '', hierbas: [{ nombre: '', dosis: '', frecuencia: '' }, { nombre: '', dosis: '', frecuencia: '' }] },
+                    2: { objetivo: 'Reducir la inflamación sistémica para mejorar el funcionamiento del organismo.', duracion: 120, fechaInicio: '', fechaFin: '', estado: 'Pendiente', observaciones: '', resultado: '', hierbas: [{ nombre: '', dosis: '', frecuencia: '' }, { nombre: '', dosis: '', frecuencia: '' }] },
+                    3: { objetivo: 'Reforzar órganos y sistemas, mejorar el metabolismo y aumentar la energía.', duracion: 90, fechaInicio: '', fechaFin: '', estado: 'Pendiente', observaciones: '', resultado: '', hierbas: [{ nombre: '', dosis: '', frecuencia: '' }, { nombre: '', dosis: '', frecuencia: '' }] },
+                    4: { objetivo: 'Abordar síntomas particulares con plantas específicas según el caso.', duracion: 90, fechaInicio: '', fechaFin: '', estado: 'Pendiente', observaciones: '', resultado: '', hierbas: [{ nombre: '', dosis: '', frecuencia: '' }, { nombre: '', dosis: '', frecuencia: '' }] }
+                },
+                fasesCompletadas: [],
+                recomendaciones: [
+                    'Beber abundante agua e infusiones para favorecer la eliminación de toxinas.',
+                    'Mantener una alimentación natural y antiinflamatoria.',
+                    'Cenar temprano, preferentemente antes de las 20:00 hs.',
+                    'Evitar alimentos ultraprocesados, irritantes y alergénicos.',
+                    'Realizar ejercicio moderado de forma regular.'
+                ],
+                profesional: '',
+                telefono: '',
+                proximaCita: '',
+                horaCita: ''
+            };
+        }
+        
+        function prepararEliminar(id) {
+            pacienteAEliminar = id;
+            const paciente = pacientes.find(p => p.id === id);
+            document.getElementById('nombre-eliminar').textContent = paciente.nombre;
+            document.getElementById('modal-eliminar').classList.add('visible');
+        }
+        
+        function cerrarModalEliminar() {
+            document.getElementById('modal-eliminar').classList.remove('visible');
+            pacienteAEliminar = null;
+        }
+        
+        function confirmarEliminar() {
+            if (pacienteAEliminar) {
+                pacientes = pacientes.filter(p => p.id !== pacienteAEliminar);
+                guardarPacientes();
+                cerrarModalEliminar();
+                renderizarLista();
+                mostrarMensaje('Paciente eliminado');
+            }
+        }
+        
+        function verCredenciales(id, e) {
+            e.stopPropagation();
+            const paciente = pacientes.find(p => p.id === id);
+            if (paciente && paciente.credenciales) {
+                document.getElementById('cred-usuario').textContent = paciente.credenciales.usuario;
+                document.getElementById('cred-password').textContent = paciente.credenciales.password;
+                document.getElementById('modal-credenciales').classList.add('visible');
+            }
+        }
+        
+        function cerrarModalCredenciales() {
+            document.getElementById('modal-credenciales').classList.remove('visible');
+        }
+        
+        // =====================
+        // CÁLCULOS
+        // =====================
+        function calcularProgresoGeneral(paciente) {
+            let totalPorcentaje = 0;
+            for (let i = 1; i <= 4; i++) {
+                totalPorcentaje += calcularPorcentajeFase(paciente.plan.fases[i]);
+            }
+            return Math.round(totalPorcentaje / 4);
+        }
+        
+        function calcularPorcentajeFase(fase) {
+            if (!fase.fechaInicio || !fase.duracion) return 0;
+            
+            const inicio = new Date(fase.fechaInicio);
+            const hoy = new Date();
+            hoy.setHours(0, 0, 0, 0);
+            inicio.setHours(0, 0, 0, 0);
+            
+            const diasTranscurridos = Math.floor((hoy - inicio) / (1000 * 60 * 60 * 24));
+            
+            if (diasTranscurridos < 0) return 0;
+            if (diasTranscurridos >= fase.duracion) return 100;
+            
+            return Math.round((diasTranscurridos / fase.duracion) * 100);
+        }
+        
+        // =====================
+        // RENDERIZADO LISTA
+        // =====================
+        function renderizarLista() {
+            const grid = document.getElementById('pacientes-grid');
+            const estadoVacio = document.getElementById('estado-vacio');
+            
+            document.getElementById('total-pacientes').textContent = pacientes.length;
+            const enTratamiento = pacientes.filter(p => {
+                const progreso = calcularProgresoGeneral(p);
+                return progreso > 0 && progreso < 100;
+            }).length;
+            document.getElementById('en-tratamiento').textContent = enTratamiento;
+            
+            if (pacientes.length === 0) {
+                grid.innerHTML = '';
+                estadoVacio.style.display = 'block';
+                return;
+            }
+            
+            estadoVacio.style.display = 'none';
+            
+            grid.innerHTML = pacientes.map(paciente => {
+                const progreso = calcularProgresoGeneral(paciente);
+                const fasesHTML = [1, 2, 3, 4].map(i => {
+                    const porcentaje = calcularPorcentajeFase(paciente.plan.fases[i]);
+                    let clase = '';
+                    if (porcentaje >= 100) clase = 'completada';
+                    else if (porcentaje > 0) clase = 'activa';
+                    return `<div class="fase-indicador ${clase}"></div>`;
+                }).join('');
+                
+                return `
+                    <div class="paciente-card" onclick="abrirPaciente('${paciente.id}')">
+                        <div class="paciente-header">
+                            <div class="paciente-nombre">${paciente.nombre}</div>
+                            <div class="paciente-fecha">Inicio: ${formatearFecha(paciente.fechaInicio)}</div>
+                            <div class="paciente-credenciales" onclick="verCredenciales('${paciente.id}', event)" title="Ver credenciales">
+                                🔐 Credenciales
+                            </div>
+                        </div>
+                        <div class="paciente-body">
+                            <div class="paciente-motivo">${paciente.motivo || 'Sin motivo especificado'}</div>
+                            <div class="paciente-progreso">
+                                <div class="progreso-label">
+                                    <span>Progreso general</span>
+                                    <span>${progreso}%</span>
+                                </div>
+                                <div class="progreso-barra">
+                                    <div class="progreso-fill" style="width: ${progreso}%"></div>
+                                </div>
+                            </div>
+                            <div class="paciente-fases">${fasesHTML}</div>
+                            <div class="paciente-acciones" onclick="event.stopPropagation()">
+                                <button class="btn-accion btn-abrir" onclick="abrirPaciente('${paciente.id}')">Abrir Plan</button>
+                                <button class="btn-accion btn-eliminar" onclick="prepararEliminar('${paciente.id}')">Eliminar</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function formatearFecha(fecha) {
+            if (!fecha) return 'No especificada';
+            const d = new Date(fecha);
+            return d.toLocaleDateString('es-AR');
+        }
+        
+        function filtrarPacientes() {
+            const busqueda = document.getElementById('busqueda').value.toLowerCase();
+            const cards = document.querySelectorAll('.paciente-card');
+            
+            cards.forEach(card => {
+                const nombre = card.querySelector('.paciente-nombre').textContent.toLowerCase();
+                const motivo = card.querySelector('.paciente-motivo').textContent.toLowerCase();
+                
+                if (nombre.includes(busqueda) || motivo.includes(busqueda)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+        
+        // =====================
+        // VISTA PLAN
+        // =====================
+        function abrirPaciente(id) {
+            pacienteActual = pacientes.find(p => p.id === id);
+            if (!pacienteActual) return;
+            
+            document.getElementById('vista-lista').classList.add('oculta');
+            document.getElementById('vista-plan').classList.add('visible');
+            document.getElementById('btn-volver').style.display = 'flex';
+            
+            renderizarPlan(false);
+        }
+        
+        function volverALista() {
+            if (usuarioActual.tipo === 'admin') {
+                guardarPlanActual();
+            }
+            document.getElementById('vista-lista').classList.remove('oculta');
+            document.getElementById('vista-plan').classList.remove('visible');
+            pacienteActual = null;
+            renderizarLista();
+        }
+        
+        function renderizarPlan(modoLectura = false) {
+            const container = document.getElementById('plan-container');
+            const p = pacienteActual;
+            const plan = p.plan;
+            
+            const claseContenedor = modoLectura ? 'modo-lectura' : '';
+            const badgeLectura = modoLectura ? '<span class="badge-lectura">Solo lectura</span>' : '';
+            
+            container.className = `plan-container ${claseContenedor}`;
+            
+            container.innerHTML = `
+                <div class="plan-header">
+                    <h1>PLAN DE TRATAMIENTO HERBAL ${badgeLectura}</h1>
+                    <p>${p.nombre}</p>
+                </div>
+                
+                <div class="datos-paciente">
+                    <h2>Datos del Paciente</h2>
+                    <div class="campo">
+                        <label>Nombre completo</label>
+                        <input type="text" id="plan-nombre" value="${p.nombre}" ${modoLectura ? 'readonly' : 'onchange="actualizarDatoPaciente(\'nombre\', this.value)"'}>
+                    </div>
+                    <div class="campo">
+                        <label>Fecha de inicio del tratamiento</label>
+                        <input type="date" id="plan-fecha" value="${p.fechaInicio || ''}" ${modoLectura ? 'readonly' : 'onchange="actualizarDatoPaciente(\'fechaInicio\', this.value)"'}>
+                    </div>
+                    <div class="campo">
+                        <label>Motivo de consulta</label>
+                        <textarea id="plan-motivo" rows="2" ${modoLectura ? 'readonly' : 'onchange="actualizarDatoPaciente(\'motivo\', this.value)"'}>${p.motivo || ''}</textarea>
+                    </div>
+                </div>
+                
+                <div class="progreso-section">
+                    <h3>PROGRESO DEL TRATAMIENTO</h3>
+                    <div class="progreso-barra-main">
+                        ${[1,2,3,4].map(i => {
+                            const completada = plan.fasesCompletadas.includes(i.toString());
+                            const porcentaje = calcularPorcentajeFase(plan.fases[i]);
+                            return `
+                                <div class="progreso-item ${completada ? 'completado' : ''}" ${modoLectura ? '' : `onclick="toggleFaseCompletada(${i})"`} data-fase="${i}">
+                                    <span>${completada ? '✓' : '☐'} Fase ${i}</span>
+                                    <small>${['Purga', 'Desinflamación', 'Fortalecimiento', 'Específico'][i-1]}</small>
+                                    <div class="porcentaje-mini">${porcentaje}%</div>
+                                </div>
+                                ${i < 4 ? '<span class="flecha">→</span>' : ''}
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+                
+                ${renderizarFases(plan, modoLectura)}
+                
+                <div class="recomendaciones">
+                    <h3>Recomendaciones Generales</h3>
+                    <div class="recomendaciones-container" id="recomendaciones-container">
+                        ${plan.recomendaciones.map((rec, idx) => `
+                            <div class="recomendacion-row">
+                                <span class="recomendacion-bullet">•</span>
+                                <input type="text" value="${rec}" ${modoLectura ? 'readonly' : `onchange="actualizarRecomendacion(${idx}, this.value)"`}>
+                                <button class="btn-eliminar-small" onclick="eliminarRecomendacion(${idx})">×</button>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button class="btn-agregar" onclick="agregarRecomendacion()">+ Agregar recomendación</button>
+                </div>
+                
+                <div class="contacto">
+                    <h3>Contacto del Profesional</h3>
+                    <div class="campo">
+                        <label>Profesional</label>
+                        <input type="text" value="${plan.profesional || ''}" ${modoLectura ? 'readonly' : 'onchange="actualizarContacto(\'profesional\', this.value)"'}>
+                    </div>
+                    <div class="campo">
+                        <label>Teléfono</label>
+                        <input type="text" value="${plan.telefono || ''}" ${modoLectura ? 'readonly' : 'onchange="actualizarContacto(\'telefono\', this.value)"'}>
+                    </div>
+                    <div class="campo">
+                        <label>Próxima cita</label>
+                        <input type="date" value="${plan.proximaCita || ''}" ${modoLectura ? 'readonly' : 'onchange="actualizarContacto(\'proximaCita\', this.value)"'}>
+                    </div>
+                    <div class="campo">
+                        <label>Hora</label>
+                        <input type="time" value="${plan.horaCita || ''}" ${modoLectura ? 'readonly' : 'onchange="actualizarContacto(\'horaCita\', this.value)"'}>
+                    </div>
+                </div>
+                
+                <div class="botones-plan">
+                    <button class="btn-plan btn-guardar-plan" onclick="guardarYMostrarMensaje()">Guardar cambios</button>
+                    <button class="btn-plan btn-imprimir" onclick="window.print()">Imprimir</button>
+                </div>
+            `;
+            
+            for (let i = 1; i <= 4; i++) {
+                actualizarPorcentajeFase(i);
+            }
+        }
+        
+        function renderizarFases(plan, modoLectura) {
+            const nombres = ['PURGA', 'DESINFLAMACIÓN', 'FORTALECIMIENTO', 'TRATAMIENTO ESPECÍFICO'];
+            
+            return [1,2,3,4].map(i => {
+                const fase = plan.fases[i];
+                const porcentaje = calcularPorcentajeFase(fase);
+                
+                let badgeClass = 'no-iniciado';
+                if (porcentaje >= 100) badgeClass = 'completado';
+                else if (porcentaje > 0) badgeClass = 'en-progreso';
+                
+                return `
+                    <div class="acordeon fase-${i}">
+                        <div class="acordeon-header" onclick="toggleAcordeon(this)">
+                            <div class="acordeon-header-left">
+                                <h3>FASE ${i}: ${nombres[i-1]}</h3>
+                                <span class="porcentaje-badge ${badgeClass}" id="badge-${i}">${porcentaje}%</span>
+                            </div>
+                            <span class="icono">+</span>
+                        </div>
+                        <div class="acordeon-contenido">
+                            <div class="acordeon-inner">
+                                <div class="progreso-info">
+                                    <span id="dias-texto-${i}">0 de ${fase.duracion} días</span>
+                                    <span id="porcentaje-texto-${i}">${porcentaje}%</span>
+                                </div>
+                                <div class="progreso-visual">
+                                    <div class="progreso-visual-fill" id="barra-${i}" style="width: ${porcentaje}%"></div>
+                                </div>
+                                
+                                <div class="objetivo">
+                                    <strong>Objetivo:</strong>
+                                    <textarea ${modoLectura ? 'readonly' : `onchange="actualizarFase(${i}, 'objetivo', this.value)"`}>${fase.objetivo}</textarea>
+                                </div>
+                                
+                                <div class="fase-info">
+                                    <div>
+                                        <label>Duración (días)</label>
+                                        <input type="number" value="${fase.duracion}" ${modoLectura ? 'readonly' : `onchange="actualizarFase(${i}, 'duracion', this.value); actualizarPorcentajeFase(${i})"`}>
+                                    </div>
+                                    <div>
+                                        <label>Fecha de inicio</label>
+                                        <input type="date" id="fecha-inicio-${i}" value="${fase.fechaInicio}" ${modoLectura ? 'readonly' : `onchange="actualizarFase(${i}, 'fechaInicio', this.value); actualizarPorcentajeFase(${i})"`}>
+                                    </div>
+                                    <div>
+                                        <label>Fecha de fin</label>
+                                        <input type="date" id="fecha-fin-${i}" value="${fase.fechaFin}" ${modoLectura ? 'readonly' : `onchange="actualizarFase(${i}, 'fechaFin', this.value)"`}>
+                                    </div>
+                                    <div>
+                                        <label>Estado</label>
+                                        <input type="text" value="${fase.estado}" ${modoLectura ? 'readonly' : `onchange="actualizarFase(${i}, 'estado', this.value)"`}>
+                                    </div>
+                                </div>
+                                
+                                <p class="hierbas-titulo">Hierbas / Productos indicados:</p>
+                                <div class="hierbas-container" id="hierbas-${i}">
+                                    ${fase.hierbas.map((h, idx) => `
+                                        <div class="hierba-row">
+                                            <input type="text" placeholder="Nombre" value="${h.nombre}" ${modoLectura ? 'readonly' : `onchange="actualizarHierba(${i}, ${idx}, 'nombre', this.value)"`}>
+                                            <input type="text" placeholder="Dosis" value="${h.dosis}" ${modoLectura ? 'readonly' : `onchange="actualizarHierba(${i}, ${idx}, 'dosis', this.value)"`}>
+                                            <input type="text" placeholder="Frecuencia" value="${h.frecuencia}" ${modoLectura ? 'readonly' : `onchange="actualizarHierba(${i}, ${idx}, 'frecuencia', this.value)"`}>
+                                            <button class="btn-eliminar-small" onclick="eliminarHierba(${i}, ${idx})">×</button>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                                <button class="btn-agregar" onclick="agregarHierba(${i})">+ Agregar hierba / producto</button>
+                                
+                                <div class="seccion-extra">
+                                    <label>Observaciones</label>
+                                    <textarea ${modoLectura ? 'readonly' : `onchange="actualizarFase(${i}, 'observaciones', this.value)"`}>${fase.observaciones}</textarea>
+                                </div>
+                                
+                                <div class="seccion-extra">
+                                    <label>Resultado de la fase</label>
+                                    <textarea ${modoLectura ? 'readonly' : `onchange="actualizarFase(${i}, 'resultado', this.value)"`}>${fase.resultado}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function toggleAcordeon(header) {
+            header.parentElement.classList.toggle('abierto');
+        }
+        
+        function toggleFaseCompletada(fase) {
+            const idx = pacienteActual.plan.fasesCompletadas.indexOf(fase.toString());
+            if (idx >= 0) {
+                pacienteActual.plan.fasesCompletadas.splice(idx, 1);
+            } else {
+                pacienteActual.plan.fasesCompletadas.push(fase.toString());
+            }
+            guardarPlanActual();
+            renderizarPlan(false);
+        }
+        
+        function actualizarDatoPaciente(campo, valor) {
+            pacienteActual[campo] = valor;
+            guardarPlanActual();
+        }
+        
+        function actualizarFase(fase, campo, valor) {
+            if (campo === 'duracion') valor = parseInt(valor) || 0;
+            pacienteActual.plan.fases[fase][campo] = valor;
+            guardarPlanActual();
+        }
+        
+        function actualizarHierba(fase, idx, campo, valor) {
+            pacienteActual.plan.fases[fase].hierbas[idx][campo] = valor;
+            guardarPlanActual();
+        }
+        
+        function agregarHierba(fase) {
+            pacienteActual.plan.fases[fase].hierbas.push({ nombre: '', dosis: '', frecuencia: '' });
+            guardarPlanActual();
+            renderizarPlan(false);
+        }
+        
+        function eliminarHierba(fase, idx) {
+            if (pacienteActual.plan.fases[fase].hierbas.length > 1) {
+                pacienteActual.plan.fases[fase].hierbas.splice(idx, 1);
+                guardarPlanActual();
+                renderizarPlan(false);
+            }
+        }
+        
+        function actualizarRecomendacion(idx, valor) {
+            pacienteActual.plan.recomendaciones[idx] = valor;
+            guardarPlanActual();
+        }
+        
+        function agregarRecomendacion() {
+            pacienteActual.plan.recomendaciones.push('');
+            guardarPlanActual();
+            renderizarPlan(false);
+        }
+        
+        function eliminarRecomendacion(idx) {
+            if (pacienteActual.plan.recomendaciones.length > 1) {
+                pacienteActual.plan.recomendaciones.splice(idx, 1);
+                guardarPlanActual();
+                renderizarPlan(false);
+            }
+        }
+        
+        function actualizarContacto(campo, valor) {
+            pacienteActual.plan[campo] = valor;
+            guardarPlanActual();
+        }
+        
+        function actualizarPorcentajeFase(fase) {
+            const faseData = pacienteActual.plan.fases[fase];
+            const porcentaje = calcularPorcentajeFase(faseData);
+            
+            const badge = document.getElementById(`badge-${fase}`);
+            if (badge) {
+                badge.textContent = `${porcentaje}%`;
+                badge.className = 'porcentaje-badge';
+                if (porcentaje === 0) badge.classList.add('no-iniciado');
+                else if (porcentaje >= 100) badge.classList.add('completado');
+                else badge.classList.add('en-progreso');
+            }
+            
+            const barra = document.getElementById(`barra-${fase}`);
+            if (barra) barra.style.width = `${porcentaje}%`;
+            
+            const diasTexto = document.getElementById(`dias-texto-${fase}`);
+            const porcentajeTexto = document.getElementById(`porcentaje-texto-${fase}`);
+            
+            if (faseData.fechaInicio && faseData.duracion) {
+                const inicio = new Date(faseData.fechaInicio);
+                const hoy = new Date();
+                let dias = Math.floor((hoy - inicio) / (1000 * 60 * 60 * 24));
+                if (dias < 0) dias = 0;
+                if (dias > faseData.duracion) dias = faseData.duracion;
+                
+                if (diasTexto) diasTexto.textContent = `${dias} de ${faseData.duracion} días`;
+                
+                const fin = new Date(inicio);
+                fin.setDate(fin.getDate() + parseInt(faseData.duracion));
+                const fechaFinInput = document.getElementById(`fecha-fin-${fase}`);
+                if (fechaFinInput) fechaFinInput.value = fin.toISOString().split('T')[0];
+                faseData.fechaFin = fin.toISOString().split('T')[0];
+            }
+            
+            if (porcentajeTexto) porcentajeTexto.textContent = `${porcentaje}%`;
+            
+            guardarPlanActual();
+        }
+        
+        function guardarPlanActual() {
+            if (!pacienteActual) return;
+            const idx = pacientes.findIndex(p => p.id === pacienteActual.id);
+            if (idx >= 0) {
+                pacientes[idx] = pacienteActual;
+                guardarPacientes();
+            }
+        }
+        
+        function guardarYMostrarMensaje() {
+            guardarPlanActual();
+            mostrarMensaje('Cambios guardados correctamente');
+        }
+    </script>
+</body>
+</html>
