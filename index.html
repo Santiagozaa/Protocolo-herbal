@@ -767,8 +767,8 @@
                 </div>
                 <div class="contacto">
                     <h3>Contacto</h3>
-                    <div class="campo"><label>Profesional</label><input value="${plan.profesional || ''}" ${modoLectura ? 'readonly' : 'onchange="actualizarContacto(\'profesional\', this.value)"'}></div>
-                    <div class="campo"><label>Teléfono</label><input value="${plan.telefono || ''}" ${modoLectura ? 'readonly' : 'onchange="actualizarContacto(\'telefono\', this.value)"'}></div>
+                    <div class="campo"><label>Nombre</label><input value="${plan.profesional || ''}" ${modoLectura ? 'readonly' : 'onchange="actualizarContacto(\'profesional\', this.value)"'}></div>
+                    <div class="campo"><label>Móvil</label><input value="${plan.telefono || ''}" ${modoLectura ? 'readonly' : 'onchange="actualizarContacto(\'telefono\', this.value)"'}></div>
                     <div class="campo"><label>Próxima cita</label><input type="date" value="${plan.proximaCita || ''}" ${modoLectura ? 'readonly' : 'onchange="actualizarContacto(\'proximaCita\', this.value)"'}></div>
                     <div class="campo"><label>Hora</label><input type="time" value="${plan.horaCita || ''}" ${modoLectura ? 'readonly' : 'onchange="actualizarContacto(\'horaCita\', this.value)"'}></div>
                 </div>
