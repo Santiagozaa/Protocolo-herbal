@@ -804,7 +804,7 @@
                         <div class="hierbas-container" id="hierbas-${i}">${f.hierbas.map((h, j) => `<div class="hierba-row"><input placeholder="Nombre" value="${h.nombre}" ${modoLectura ? 'readonly' : `onchange="actualizarHierba(${i}, ${j}, 'nombre', this.value)"`}><input placeholder="Dosis" value="${h.dosis}" ${modoLectura ? 'readonly' : `onchange="actualizarHierba(${i}, ${j}, 'dosis', this.value)"`}><input placeholder="Frecuencia" value="${h.frecuencia}" ${modoLectura ? 'readonly' : `onchange="actualizarHierba(${i}, ${j}, 'frecuencia', this.value)"`}><button class="btn-eliminar-small" onclick="eliminarHierba(${i}, ${j})">×</button></div>`).join('')}</div>
                         <button class="btn-agregar" onclick="agregarHierba(${i})">+ Agregar hierba</button>
                         <div class="seccion-extra"><label>Observaciones</label><textarea ${modoLectura ? 'readonly' : `onchange="actualizarFase(${i}, 'observaciones', this.value)"`}>${f.observaciones}</textarea></div>
-                        <div class="seccion-extra"><label>Resultado</label><textarea ${modoLectura ? 'readonly' : `onchange="actualizarFase(${i}, 'resultado', this.value)"`}>${f.resultado}</textarea></div>
+                        <div class="seccion-extra"><label>Lista</label><textarea ${modoLectura ? 'readonly' : `onchange="actualizarFase(${i}, 'resultado', this.value)"`}>${f.resultado}</textarea></div>
                     </div></div>
                 </div>`;
             }).join('');
