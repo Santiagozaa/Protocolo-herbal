@@ -186,7 +186,7 @@
         .progreso-visual-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; background: linear-gradient(90deg, #4caf50, #8bc34a); }
         .progreso-info { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13px; color: #666; }
         .fase-info { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #eee; }
-        .fase-info > div { background: #f9f9f9; padding: 12px 15px; border-radius: 6px; }
+        .fase-info > div { background: #f9f9f9; padding: 12px 15px; border-radius: 6px; position: relative; }
         .fase-info label { font-size: 12px; color: #888; display: block; margin-bottom: 3px; }
         .fase-info input { border: none; background: transparent; width: 100%; padding: 0; font-size: 15px; font-weight: 500; }
         .objetivo { background: #f5f5f5; padding: 15px; border-radius: 6px; margin-bottom: 20px; border-left: 4px solid #6d4c41; }
@@ -233,21 +233,7 @@
         .btn-guardar-plan { background: #1976d2; color: white; }
         .btn-guardar-plan:hover { background: #1565c0; }
         
-        @media print {
-            .header, .btn-volver, .botones-plan, .btn-agregar, .btn-eliminar-small, .login-screen { display: none !important; }
-            .acordeon-contenido { max-height: none !important; }
-            .app-container { display: block !important; }
-        }
-        
-        @media (max-width: 600px) {
-            .header-content { flex-direction: column; text-align: center; }
-            .fase-info, .contacto { grid-template-columns: 1fr; }
-            .hierba-row { grid-template-columns: 1fr; }
-            .progreso-barra-main { flex-direction: column; }
-            .flecha { transform: rotate(90deg); }
-            .login-tipo { flex-direction: column; }
-        }
-        
+        /* CAMPO FECHA */
         .campo-fecha { 
             position: relative; 
             display: block; 
@@ -262,6 +248,7 @@
             top: 0;
             left: 0;
             cursor: pointer;
+            z-index: 10;
         }
         .campo-fecha .fecha-formateada { 
             font-size: 15px; 
@@ -272,18 +259,35 @@
             color: #333;
         }
         
+        .fase-info .campo-fecha {
+            position: relative;
+        }
         .fase-info .campo-fecha input[type="date"] {
-            position: absolute !important;
-            opacity: 0 !important;
-            width: 100% !important;
-            height: 100% !important;
-            top: 0 !important;
-            left: 0 !important;
-            padding: 0 !important;
-            cursor: pointer !important;
-            z-index: 10 !important;
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            padding: 0;
+            cursor: pointer;
+            z-index: 10;
         }
         
+        @media print {
+            .header, .btn-volver, .botones-plan, .btn-agregar, .btn-eliminar-small, .login-screen { display: none !important; }
+            .acordeon-contenido { max-height: none !important; }
+            .app-container { display: block !important; }
+        }
+        
+        @media (max-width: 600px) {
+            .header-content { flex-direction: column; text-align: center; }
+            .fase-info, .contacto { grid-template-columns: 1fr; }
+            .hierba-row { grid-template-columns: 1fr; }
+            .progreso-barra-main { flex-direction: column; }
+            .flecha { transform: rotate(90deg); }
+            .login-tipo { flex-direction: column; }
+        }
     </style>
 </head>
 <body>
@@ -427,7 +431,7 @@
     
     <script>
         // ╔════════════════════════════════════════════════════════════════╗
-        // ║  🔥 PEGA TUS CREDENCIALES DE FIREBASE AQUÍ ABAJO 🔥            ║
+        // ║  🔥 CREDENCIALES DE FIREBASE 🔥                                ║
         // ╚════════════════════════════════════════════════════════════════╝
         
         const firebaseConfig = {
@@ -440,7 +444,7 @@
         };
         
         // ╔════════════════════════════════════════════════════════════════╗
-        // ║  NO MODIFIQUES NADA DEBAJO DE ESTA LÍNEA                       ║
+        // ║  VARIABLES GLOBALES                                            ║
         // ╚════════════════════════════════════════════════════════════════╝
         
         let db = null;
@@ -453,7 +457,10 @@
         const ADMIN_USER = 'admin';
         const ADMIN_PASS = 'admin123';
         
-        // INIT
+        // ╔════════════════════════════════════════════════════════════════╗
+        // ║  INICIALIZACIÓN                                                ║
+        // ╚════════════════════════════════════════════════════════════════╝
+        
         document.addEventListener('DOMContentLoaded', async function() {
             try {
                 mostrarLoading('Conectando...');
@@ -479,6 +486,10 @@
             }
         }
         
+        // ╔════════════════════════════════════════════════════════════════╗
+        // ║  UTILIDADES                                                    ║
+        // ╚════════════════════════════════════════════════════════════════╝
+        
         function mostrarLoading(t = 'Cargando...') {
             document.getElementById('loading').classList.add('visible');
             document.querySelector('.loading-text').textContent = t;
@@ -487,6 +498,26 @@
         function ocultarLoading() {
             document.getElementById('loading').classList.remove('visible');
         }
+        
+        function mostrarMensaje(t, tipo = 'exito') {
+            const toast = document.getElementById('mensaje-toast');
+            toast.textContent = t;
+            toast.className = 'mensaje-toast visible ' + tipo;
+            setTimeout(() => toast.classList.remove('visible'), 3000);
+        }
+        
+        function formatearFecha(fecha) {
+            if (!fecha) return '';
+            const partes = fecha.split('-');
+            if (partes.length === 3) {
+                return partes[2] + '/' + partes[1] + '/' + partes[0];
+            }
+            return fecha;
+        }
+        
+        // ╔════════════════════════════════════════════════════════════════╗
+        // ║  AUTENTICACIÓN                                                 ║
+        // ╚════════════════════════════════════════════════════════════════╝
         
         function cambiarTipoLogin(tipo) {
             tipoLoginActual = tipo;
@@ -581,6 +612,10 @@
             }
         }
         
+        // ╔════════════════════════════════════════════════════════════════╗
+        // ║  BASE DE DATOS                                                 ║
+        // ╚════════════════════════════════════════════════════════════════╝
+        
         async function cargarPacientes() {
             mostrarLoading('Cargando pacientes...');
             try {
@@ -595,8 +630,12 @@
         
         async function guardarPaciente(p) {
             try {
-                if (p.id) await db.collection('pacientes').doc(p.id).set(p);
-                else { const ref = await db.collection('pacientes').add(p); p.id = ref.id; }
+                if (p.id) {
+                    await db.collection('pacientes').doc(p.id).set(p);
+                } else {
+                    const ref = await db.collection('pacientes').add(p);
+                    p.id = ref.id;
+                }
                 return true;
             } catch (error) {
                 console.error(error);
@@ -606,16 +645,19 @@
         }
         
         async function eliminarPacienteDB(id) {
-            try { await db.collection('pacientes').doc(id).delete(); return true; }
-            catch (error) { console.error(error); mostrarMensaje('Error al eliminar', 'error'); return false; }
+            try {
+                await db.collection('pacientes').doc(id).delete();
+                return true;
+            } catch (error) {
+                console.error(error);
+                mostrarMensaje('Error al eliminar', 'error');
+                return false;
+            }
         }
         
-        function mostrarMensaje(t, tipo = 'exito') {
-            const toast = document.getElementById('mensaje-toast');
-            toast.textContent = t;
-            toast.className = 'mensaje-toast visible ' + tipo;
-            setTimeout(() => toast.classList.remove('visible'), 3000);
-        }
+        // ╔════════════════════════════════════════════════════════════════╗
+        // ║  MODALES                                                       ║
+        // ╚════════════════════════════════════════════════════════════════╝
         
         function abrirModalNuevo() {
             document.getElementById('modal-nuevo').classList.add('visible');
@@ -632,55 +674,16 @@
             document.getElementById('nuevo-password').value = '';
         }
         
-        async function crearPaciente() {
-            const nombre = document.getElementById('nuevo-nombre').value.trim();
-            const fecha = document.getElementById('nuevo-fecha').value;
-            const motivo = document.getElementById('nuevo-motivo').value.trim();
-            const usuario = document.getElementById('nuevo-usuario').value.trim();
-            const password = document.getElementById('nuevo-password').value;
-            
-            if (!nombre) return mostrarMensaje('Ingrese el nombre', 'error');
-            if (!usuario || !password) return mostrarMensaje('Ingrese usuario y contraseña', 'error');
-            if (password.length < 6) return mostrarMensaje('Contraseña mínimo 6 caracteres', 'error');
-            
-            const existe = await db.collection('pacientes').where('credenciales.usuario', '==', usuario).get();
-            if (!existe.empty) return mostrarMensaje('El usuario ya existe', 'error');
-            
-            document.getElementById('btn-crear-paciente').disabled = true;
-            mostrarLoading('Creando...');
-            
-            const nuevo = { nombre, fechaInicio: fecha, motivo, fechaCreacion: new Date().toISOString(), credenciales: { usuario, password }, plan: crearPlanVacio() };
-            if (await guardarPaciente(nuevo)) {
-                pacientes.unshift(nuevo);
-                cerrarModal();
-                renderizarLista();
-                mostrarMensaje('Paciente creado');
-            }
-            document.getElementById('btn-crear-paciente').disabled = false;
-            ocultarLoading();
-        }
-        
-        function crearPlanVacio() {
-            return {
-                fases: {
-                    1: { objetivo: 'Eliminar toxinas y limpiar el sistema digestivo, hígado, riñones y piel.', duracion: 60, fechaInicio: '', fechaFin: '', estado: 'Pendiente', observaciones: '', resultado: '', hierbas: [{ nombre: '', dosis: '', frecuencia: '' }, { nombre: '', dosis: '', frecuencia: '' }] },
-                    2: { objetivo: 'Reducir la inflamación sistémica para mejorar el funcionamiento del organismo.', duracion: 120, fechaInicio: '', fechaFin: '', estado: 'Pendiente', observaciones: '', resultado: '', hierbas: [{ nombre: '', dosis: '', frecuencia: '' }, { nombre: '', dosis: '', frecuencia: '' }] },
-                    3: { objetivo: 'Reforzar órganos y sistemas, mejorar el metabolismo y aumentar la energía.', duracion: 90, fechaInicio: '', fechaFin: '', estado: 'Pendiente', observaciones: '', resultado: '', hierbas: [{ nombre: '', dosis: '', frecuencia: '' }, { nombre: '', dosis: '', frecuencia: '' }] },
-                    4: { objetivo: 'Abordar síntomas particulares con plantas específicas según el caso.', duracion: 90, fechaInicio: '', fechaFin: '', estado: 'Pendiente', observaciones: '', resultado: '', hierbas: [{ nombre: '', dosis: '', frecuencia: '' }, { nombre: '', dosis: '', frecuencia: '' }] }
-                },
-                fasesCompletadas: [],
-                recomendaciones: ['Beber abundante agua.', 'Alimentación natural.', 'Cenar temprano.', 'Evitar ultraprocesados.', 'Ejercicio moderado.'],
-                profesional: '', telefono: '', proximaCita: '', horaCita: ''
-            };
-        }
-        
         function prepararEliminar(id) {
             pacienteAEliminar = id;
             document.getElementById('nombre-eliminar').textContent = pacientes.find(p => p.id === id).nombre;
             document.getElementById('modal-eliminar').classList.add('visible');
         }
         
-        function cerrarModalEliminar() { document.getElementById('modal-eliminar').classList.remove('visible'); pacienteAEliminar = null; }
+        function cerrarModalEliminar() {
+            document.getElementById('modal-eliminar').classList.remove('visible');
+            pacienteAEliminar = null;
+        }
         
         async function confirmarEliminar() {
             if (pacienteAEliminar) {
@@ -705,9 +708,78 @@
             }
         }
         
-        function cerrarModalCredenciales() { document.getElementById('modal-credenciales').classList.remove('visible'); }
+        function cerrarModalCredenciales() {
+            document.getElementById('modal-credenciales').classList.remove('visible');
+        }
         
-        function calcularProgresoGeneral(p) { let t = 0; for (let i = 1; i <= 4; i++) t += calcularPorcentajeFase(p.plan.fases[i]); return Math.round(t / 4); }
+        // ╔════════════════════════════════════════════════════════════════╗
+        // ║  CREAR PACIENTE                                                ║
+        // ╚════════════════════════════════════════════════════════════════╝
+        
+        async function crearPaciente() {
+            const nombre = document.getElementById('nuevo-nombre').value.trim();
+            const fecha = document.getElementById('nuevo-fecha').value;
+            const motivo = document.getElementById('nuevo-motivo').value.trim();
+            const usuario = document.getElementById('nuevo-usuario').value.trim();
+            const password = document.getElementById('nuevo-password').value;
+            
+            if (!nombre) return mostrarMensaje('Ingrese el nombre', 'error');
+            if (!usuario || !password) return mostrarMensaje('Ingrese usuario y contraseña', 'error');
+            if (password.length < 6) return mostrarMensaje('Contraseña mínimo 6 caracteres', 'error');
+            
+            const existe = await db.collection('pacientes').where('credenciales.usuario', '==', usuario).get();
+            if (!existe.empty) return mostrarMensaje('El usuario ya existe', 'error');
+            
+            document.getElementById('btn-crear-paciente').disabled = true;
+            mostrarLoading('Creando...');
+            
+            const nuevo = {
+                nombre,
+                fechaInicio: fecha,
+                motivo,
+                fechaCreacion: new Date().toISOString(),
+                credenciales: { usuario, password },
+                plan: crearPlanVacio()
+            };
+            
+            if (await guardarPaciente(nuevo)) {
+                pacientes.unshift(nuevo);
+                cerrarModal();
+                renderizarLista();
+                mostrarMensaje('Paciente creado');
+            }
+            document.getElementById('btn-crear-paciente').disabled = false;
+            ocultarLoading();
+        }
+        
+        function crearPlanVacio() {
+            return {
+                fases: {
+                    1: { objetivo: 'Eliminar toxinas y limpiar el sistema digestivo, hígado, riñones y piel.', duracion: 60, fechaInicio: '', fechaFin: '', estado: 'Pendiente', observaciones: '', resultado: '', hierbas: [{ nombre: '', dosis: '', frecuencia: '' }, { nombre: '', dosis: '', frecuencia: '' }] },
+                    2: { objetivo: 'Reducir la inflamación sistémica para mejorar el funcionamiento del organismo.', duracion: 120, fechaInicio: '', fechaFin: '', estado: 'Pendiente', observaciones: '', resultado: '', hierbas: [{ nombre: '', dosis: '', frecuencia: '' }, { nombre: '', dosis: '', frecuencia: '' }] },
+                    3: { objetivo: 'Reforzar órganos y sistemas, mejorar el metabolismo y aumentar la energía.', duracion: 90, fechaInicio: '', fechaFin: '', estado: 'Pendiente', observaciones: '', resultado: '', hierbas: [{ nombre: '', dosis: '', frecuencia: '' }, { nombre: '', dosis: '', frecuencia: '' }] },
+                    4: { objetivo: 'Abordar síntomas particulares con plantas específicas según el caso.', duracion: 90, fechaInicio: '', fechaFin: '', estado: 'Pendiente', observaciones: '', resultado: '', hierbas: [{ nombre: '', dosis: '', frecuencia: '' }, { nombre: '', dosis: '', frecuencia: '' }] }
+                },
+                fasesCompletadas: [],
+                recomendaciones: ['Beber abundante agua.', 'Alimentación natural.', 'Cenar temprano.', 'Evitar ultraprocesados.', 'Ejercicio moderado.'],
+                profesional: '',
+                telefono: '',
+                proximaCita: '',
+                horaCita: ''
+            };
+        }
+        
+        // ╔════════════════════════════════════════════════════════════════╗
+        // ║  CÁLCULOS DE PROGRESO                                          ║
+        // ╚════════════════════════════════════════════════════════════════╝
+        
+        function calcularProgresoGeneral(p) {
+            let t = 0;
+            for (let i = 1; i <= 4; i++) {
+                t += calcularPorcentajeFase(p.plan.fases[i]);
+            }
+            return Math.round(t / 4);
+        }
         
         function calcularPorcentajeFase(f) {
             if (!f.fechaInicio || !f.duracion) return 0;
@@ -717,27 +789,44 @@
             return Math.round((dias / f.duracion) * 100);
         }
         
+        // ╔════════════════════════════════════════════════════════════════╗
+        // ║  LISTA DE PACIENTES                                            ║
+        // ╚════════════════════════════════════════════════════════════════╝
+        
         function renderizarLista() {
             const grid = document.getElementById('pacientes-grid');
             const vacio = document.getElementById('estado-vacio');
             document.getElementById('total-pacientes').textContent = pacientes.length;
-            document.getElementById('en-tratamiento').textContent = pacientes.filter(p => { const pr = calcularProgresoGeneral(p); return pr > 0 && pr < 100; }).length;
+            document.getElementById('en-tratamiento').textContent = pacientes.filter(p => {
+                const pr = calcularProgresoGeneral(p);
+                return pr > 0 && pr < 100;
+            }).length;
             
-            if (!pacientes.length) { grid.innerHTML = ''; vacio.style.display = 'block'; return; }
+            if (!pacientes.length) {
+                grid.innerHTML = '';
+                vacio.style.display = 'block';
+                return;
+            }
             vacio.style.display = 'none';
             
             grid.innerHTML = pacientes.map(p => {
                 const prog = calcularProgresoGeneral(p);
-                const fases = [1,2,3,4].map(i => { const pct = calcularPorcentajeFase(p.plan.fases[i]); return `<div class="fase-indicador ${pct >= 100 ? 'completada' : pct > 0 ? 'activa' : ''}"></div>`; }).join('');
+                const fases = [1,2,3,4].map(i => {
+                    const pct = calcularPorcentajeFase(p.plan.fases[i]);
+                    return `<div class="fase-indicador ${pct >= 100 ? 'completada' : pct > 0 ? 'activa' : ''}"></div>`;
+                }).join('');
                 return `<div class="paciente-card" onclick="abrirPaciente('${p.id}')">
                     <div class="paciente-header">
                         <div class="paciente-nombre">${p.nombre}</div>
-                        <div class="paciente-fecha">Inicio: ${p.fechaInicio ? new Date(p.fechaInicio).toLocaleDateString('es-AR', {day: '2-digit', month: '2-digit', year: 'numeric'}) : 'No especificada'}</div> 
+                        <div class="paciente-fecha">Inicio: ${p.fechaInicio ? new Date(p.fechaInicio).toLocaleDateString('es-AR', {day: '2-digit', month: '2-digit', year: 'numeric'}) : 'No especificada'}</div>
                         <div class="paciente-credenciales" onclick="verCredenciales('${p.id}', event)">🔐 Credenciales</div>
                     </div>
                     <div class="paciente-body">
                         <div class="paciente-motivo">${p.motivo || 'Sin motivo'}</div>
-                        <div class="paciente-progreso"><div class="progreso-label"><span>Progreso</span><span>${prog}%</span></div><div class="progreso-barra"><div class="progreso-fill" style="width:${prog}%"></div></div></div>
+                        <div class="paciente-progreso">
+                            <div class="progreso-label"><span>Progreso</span><span>${prog}%</span></div>
+                            <div class="progreso-barra"><div class="progreso-fill" style="width:${prog}%"></div></div>
+                        </div>
                         <div class="paciente-fases">${fases}</div>
                         <div class="paciente-acciones" onclick="event.stopPropagation()">
                             <button class="btn-accion btn-abrir" onclick="abrirPaciente('${p.id}')">Abrir Plan</button>
@@ -755,6 +844,10 @@
                 c.style.display = n.includes(q) ? 'block' : 'none';
             });
         }
+        
+        // ╔════════════════════════════════════════════════════════════════╗
+        // ║  NAVEGACIÓN                                                    ║
+        // ╚════════════════════════════════════════════════════════════════╝
         
         async function abrirPaciente(id) {
             pacienteActual = pacientes.find(p => p.id === id || p.id === String(id));
@@ -778,7 +871,10 @@
             renderizarLista();
         }
         
-
+        // ╔════════════════════════════════════════════════════════════════╗
+        // ║  RENDERIZADO DEL PLAN                                          ║
+        // ╚════════════════════════════════════════════════════════════════╝
+        
         function renderizarPlan(modoLectura = false) {
             // Guardar acordeones abiertos
             const acordeonesAbiertos = [];
@@ -883,45 +979,117 @@
                 const acordeon = document.querySelector('.' + clase);
                 if (acordeon) acordeon.classList.add('abierto');
             });
-    }
-        
-        
+        }
         
         function renderizarFases(plan, modoLectura) {
             const nombres = ['PURGA', 'DESINFLAMACIÓN', 'FORTALECIMIENTO', 'TRATAMIENTO ESPECÍFICO'];
             return [1,2,3,4].map(i => {
-                const f = plan.fases[i], pct = calcularPorcentajeFase(f);
+                const f = plan.fases[i];
+                const pct = calcularPorcentajeFase(f);
                 let badge = pct === 0 ? 'no-iniciado' : pct >= 100 ? 'completado' : 'en-progreso';
+                
                 return `<div class="acordeon fase-${i}">
                     <div class="acordeon-header" onclick="toggleAcordeon(this)">
-                        <div class="acordeon-header-left"><h3>FASE ${i}: ${nombres[i-1]}</h3><span class="porcentaje-badge ${badge}" id="badge-${i}">${pct}%</span></div>
+                        <div class="acordeon-header-left">
+                            <h3>FASE ${i}: ${nombres[i-1]}</h3>
+                            <span class="porcentaje-badge ${badge}" id="badge-${i}">${pct}%</span>
+                        </div>
                         <span class="icono">+</span>
                     </div>
-                    <div class="acordeon-contenido"><div class="acordeon-inner">
-                        <div class="progreso-info"><span id="dias-${i}">0 de ${f.duracion} días</span><span id="pct-${i}">${pct}%</span></div>
-                        <div class="progreso-visual"><div class="progreso-visual-fill" id="barra-${i}" style="width:${pct}%"></div></div>
-                        <div class="objetivo"><strong>Objetivo:</strong><textarea ${modoLectura ? 'readonly' : `onchange="actualizarFase(${i}, 'objetivo', this.value)"`}>${f.objetivo}</textarea></div>
-                        <div class="fase-info">
-                            <div><label>Duración (días)</label><input type="number" value="${f.duracion}" ${modoLectura ? 'readonly' : `onchange="actualizarFase(${i}, 'duracion', this.value); actualizarPorcentajeUI(${i})"`}></div>
-                            <div><label>Fecha inicio</label><div class="campo-fecha"><input type="date" id="fi-${i}" value="${f.fechaInicio}" ${modoLectura ? 'readonly' : `onchange="actualizarFase(${i}, 'fechaInicio', this.value); actualizarPorcentajeUI(${i}); renderizarPlan(false)"`}><span class="fecha-formateada">${formatearFecha(f.fechaInicio) || 'Seleccionar'}</span></div></div>
-                            <div><label>Fecha fin</label><div class="campo-fecha"><input type="date" id="ff-${i}" value="${f.fechaFin}" readonly><span class="fecha-formateada">${formatearFecha(f.fechaFin) || '-'}</span></div></div>
-                            <div><label>Estado</label><input value="${f.estado}" ${modoLectura ? 'readonly' : `onchange="actualizarFase(${i}, 'estado', this.value)"`}></div>
+                    <div class="acordeon-contenido">
+                        <div class="acordeon-inner">
+                            <div class="progreso-info">
+                                <span id="dias-${i}">0 de ${f.duracion} días</span>
+                                <span id="pct-${i}">${pct}%</span>
+                            </div>
+                            <div class="progreso-visual">
+                                <div class="progreso-visual-fill" id="barra-${i}" style="width:${pct}%"></div>
+                            </div>
+                            <div class="objetivo">
+                                <strong>Objetivo:</strong>
+                                <textarea ${modoLectura ? 'readonly' : `onchange="actualizarFase(${i}, 'objetivo', this.value)"`}>${f.objetivo}</textarea>
+                            </div>
+                            <div class="fase-info">
+                                <div>
+                                    <label>Duración (días)</label>
+                                    <input type="number" value="${f.duracion}" ${modoLectura ? 'readonly' : `onchange="actualizarFase(${i}, 'duracion', this.value); actualizarPorcentajeUI(${i})"`}>
+                                </div>
+                                <div>
+                                    <label>Fecha inicio</label>
+                                    <div class="campo-fecha">
+                                        <input type="date" id="fi-${i}" value="${f.fechaInicio}" ${modoLectura ? 'readonly' : `onchange="actualizarFase(${i}, 'fechaInicio', this.value); actualizarPorcentajeUI(${i}); renderizarPlan(false)"`}>
+                                        <span class="fecha-formateada">${formatearFecha(f.fechaInicio) || 'Seleccionar'}</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label>Fecha fin</label>
+                                    <div class="campo-fecha">
+                                        <input type="date" id="ff-${i}" value="${f.fechaFin}" readonly>
+                                        <span class="fecha-formateada">${formatearFecha(f.fechaFin) || '-'}</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label>Estado</label>
+                                    <input value="${f.estado}" ${modoLectura ? 'readonly' : `onchange="actualizarFase(${i}, 'estado', this.value)"`}>
+                                </div>
+                            </div>
+                            <p class="hierbas-titulo">Hierbas:</p>
+                            <div class="hierbas-container" id="hierbas-${i}">
+                                ${f.hierbas.map((h, j) => `
+                                    <div class="hierba-row">
+                                        <input placeholder="Nombre" value="${h.nombre}" ${modoLectura ? 'readonly' : `onchange="actualizarHierba(${i}, ${j}, 'nombre', this.value)"`}>
+                                        <input placeholder="Dosis" value="${h.dosis}" ${modoLectura ? 'readonly' : `onchange="actualizarHierba(${i}, ${j}, 'dosis', this.value)"`}>
+                                        <input placeholder="Frecuencia" value="${h.frecuencia}" ${modoLectura ? 'readonly' : `onchange="actualizarHierba(${i}, ${j}, 'frecuencia', this.value)"`}>
+                                        <button class="btn-eliminar-small" onclick="eliminarHierba(${i}, ${j})">×</button>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <button type="button" class="btn-agregar" onclick="agregarHierba(${i})">+ Agregar hierba</button>
+                            <div class="seccion-extra">
+                                <label>Observaciones</label>
+                                <textarea ${modoLectura ? 'readonly' : `onchange="actualizarFase(${i}, 'observaciones', this.value)"`}>${f.observaciones}</textarea>
+                            </div>
+                            <div class="seccion-extra">
+                                <label>Lista</label>
+                                <textarea ${modoLectura ? 'readonly' : `onchange="actualizarFase(${i}, 'resultado', this.value)"`}>${f.resultado}</textarea>
+                            </div>
                         </div>
-                        <p class="hierbas-titulo">Hierbas:</p>
-                        <div class="hierbas-container" id="hierbas-${i}">${f.hierbas.map((h, j) => `<div class="hierba-row"><input placeholder="Nombre" value="${h.nombre}" ${modoLectura ? 'readonly' : `onchange="actualizarHierba(${i}, ${j}, 'nombre', this.value)"`}><input placeholder="Dosis" value="${h.dosis}" ${modoLectura ? 'readonly' : `onchange="actualizarHierba(${i}, ${j}, 'dosis', this.value)"`}><input placeholder="Frecuencia" value="${h.frecuencia}" ${modoLectura ? 'readonly' : `onchange="actualizarHierba(${i}, ${j}, 'frecuencia', this.value)"`}><button class="btn-eliminar-small" onclick="eliminarHierba(${i}, ${j})">×</button></div>`).join('')}</div>
-                        <button type="button" class="btn-agregar" onclick="agregarHierba(${i})">+ Agregar hierba</button>
-                        <div class="seccion-extra"><label>Observaciones</label><textarea ${modoLectura ? 'readonly' : `onchange="actualizarFase(${i}, 'observaciones', this.value)"`}>${f.observaciones}</textarea></div>
-                        <div class="seccion-extra"><label>Lista</label><textarea ${modoLectura ? 'readonly' : `onchange="actualizarFase(${i}, 'resultado', this.value)"`}>${f.resultado}</textarea></div>
-                    </div></div>
+                    </div>
                 </div>`;
             }).join('');
         }
         
-        function toggleAcordeon(h) { h.parentElement.classList.toggle('abierto'); }
-        function toggleFase(i) { const arr = pacienteActual.plan.fasesCompletadas, idx = arr.indexOf(i.toString()); idx >= 0 ? arr.splice(idx, 1) : arr.push(i.toString()); renderizarPlan(false); }
-        function actualizarDato(k, v) { pacienteActual[k] = v; }
-        function actualizarFase(i, k, v) { if (k === 'duracion') v = parseInt(v) || 0; pacienteActual.plan.fases[i][k] = v; }
-        function actualizarHierba(i, j, k, v) { pacienteActual.plan.fases[i].hierbas[j][k] = v; }
+        // ╔════════════════════════════════════════════════════════════════╗
+        // ║  FUNCIONES DE ACTUALIZACIÓN                                    ║
+        // ╚════════════════════════════════════════════════════════════════╝
+        
+        function toggleAcordeon(h) {
+            h.parentElement.classList.toggle('abierto');
+        }
+        
+        function toggleFase(i) {
+            const arr = pacienteActual.plan.fasesCompletadas;
+            const idx = arr.indexOf(i.toString());
+            if (idx >= 0) {
+                arr.splice(idx, 1);
+            } else {
+                arr.push(i.toString());
+            }
+            renderizarPlan(false);
+        }
+        
+        function actualizarDato(k, v) {
+            pacienteActual[k] = v;
+        }
+        
+        function actualizarFase(i, k, v) {
+            if (k === 'duracion') v = parseInt(v) || 0;
+            pacienteActual.plan.fases[i][k] = v;
+        }
+        
+        function actualizarHierba(i, j, k, v) {
+            pacienteActual.plan.fases[i].hierbas[j][k] = v;
+        }
         
         function agregarHierba(i) {
             pacienteActual.plan.fases[i].hierbas.push({ nombre: '', dosis: '', frecuencia: '' });
@@ -930,41 +1098,68 @@
             document.querySelector('.fase-' + i + ' .acordeon-header').scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
         
-        function formatearFecha(fecha) {
-            if (!fecha) return '';
-            const partes = fecha.split('-');
-            if (partes.length === 3) {
-                return partes[2] + '/' + partes[1] + '/' + partes[0];
+        function eliminarHierba(i, j) {
+            if (pacienteActual.plan.fases[i].hierbas.length > 1) {
+                pacienteActual.plan.fases[i].hierbas.splice(j, 1);
+                renderizarPlan(false);
             }
-            return fecha;
         }
-
-
-        function eliminarHierba(i, j) { if (pacienteActual.plan.fases[i].hierbas.length > 1) { pacienteActual.plan.fases[i].hierbas.splice(j, 1); renderizarPlan(false); } }
-        function actualizarRec(i, v) { pacienteActual.plan.recomendaciones[i] = v; }
-        function agregarRec() { pacienteActual.plan.recomendaciones.push(''); renderizarPlan(false); }
-        function eliminarRec(i) { if (pacienteActual.plan.recomendaciones.length > 1) { pacienteActual.plan.recomendaciones.splice(i, 1); renderizarPlan(false); } }
-        function actualizarContacto(k, v) { pacienteActual.plan[k] = v; }
+        
+        function actualizarRec(i, v) {
+            pacienteActual.plan.recomendaciones[i] = v;
+        }
+        
+        function agregarRec() {
+            pacienteActual.plan.recomendaciones.push('');
+            renderizarPlan(false);
+        }
+        
+        function eliminarRec(i) {
+            if (pacienteActual.plan.recomendaciones.length > 1) {
+                pacienteActual.plan.recomendaciones.splice(i, 1);
+                renderizarPlan(false);
+            }
+        }
+        
+        function actualizarContacto(k, v) {
+            pacienteActual.plan[k] = v;
+        }
         
         function actualizarPorcentajeUI(i) {
-            const f = pacienteActual.plan.fases[i], pct = calcularPorcentajeFase(f);
+            const f = pacienteActual.plan.fases[i];
+            const pct = calcularPorcentajeFase(f);
+            
             const badge = document.getElementById(`badge-${i}`);
-            if (badge) { badge.textContent = `${pct}%`; badge.className = 'porcentaje-badge ' + (pct === 0 ? 'no-iniciado' : pct >= 100 ? 'completado' : 'en-progreso'); }
+            if (badge) {
+                badge.textContent = `${pct}%`;
+                badge.className = 'porcentaje-badge ' + (pct === 0 ? 'no-iniciado' : pct >= 100 ? 'completado' : 'en-progreso');
+            }
+            
             const barra = document.getElementById(`barra-${i}`);
             if (barra) barra.style.width = `${pct}%`;
+            
             if (f.fechaInicio && f.duracion) {
                 let dias = Math.floor((new Date() - new Date(f.fechaInicio)) / 86400000);
-                if (dias < 0) dias = 0; if (dias > f.duracion) dias = f.duracion;
+                if (dias < 0) dias = 0;
+                if (dias > f.duracion) dias = f.duracion;
+                
                 const diasEl = document.getElementById(`dias-${i}`);
                 if (diasEl) diasEl.textContent = `${dias} de ${f.duracion} días`;
-                const fin = new Date(f.fechaInicio); fin.setDate(fin.getDate() + parseInt(f.duracion));
+                
+                const fin = new Date(f.fechaInicio);
+                fin.setDate(fin.getDate() + parseInt(f.duracion));
                 const ffEl = document.getElementById(`ff-${i}`);
                 if (ffEl) ffEl.value = fin.toISOString().split('T')[0];
                 f.fechaFin = fin.toISOString().split('T')[0];
             }
+            
             const pctEl = document.getElementById(`pct-${i}`);
             if (pctEl) pctEl.textContent = `${pct}%`;
         }
+        
+        // ╔════════════════════════════════════════════════════════════════╗
+        // ║  GUARDAR                                                       ║
+        // ╚════════════════════════════════════════════════════════════════╝
         
         async function guardarPlanActual() {
             if (!pacienteActual) return;
@@ -975,18 +1170,25 @@
             ocultarLoading();
         }
         
-        async function guardarYMostrar() { await guardarPlanActual(); mostrarMensaje('Guardado en la nube ☁️'); }
-                
-                // Activar date picker al hacer click en el contenedor
-                document.addEventListener('click', function(e) {
-                    const campoFecha = e.target.closest('.campo-fecha');
-                    if (campoFecha) {
-                        const input = campoFecha.querySelector('input[type="date"]');
-                        if (input && !input.readOnly) {
-                            input.showPicker();
-                        }
-                    }
-                });
+        async function guardarYMostrar() {
+            await guardarPlanActual();
+            mostrarMensaje('Guardado en la nube ☁️');
+        }
+        
+        // ╔════════════════════════════════════════════════════════════════╗
+        // ║  EVENT LISTENERS                                               ║
+        // ╚════════════════════════════════════════════════════════════════╝
+        
+        // Activar date picker al hacer click en el contenedor
+        document.addEventListener('click', function(e) {
+            const campoFecha = e.target.closest('.campo-fecha');
+            if (campoFecha) {
+                const input = campoFecha.querySelector('input[type="date"]');
+                if (input && !input.readOnly) {
+                    input.showPicker();
+                }
+            }
+        });
     </script>
 </body>
 </html>
