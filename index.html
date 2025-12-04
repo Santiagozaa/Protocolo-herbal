@@ -818,7 +818,7 @@
                 return `<div class="paciente-card" onclick="abrirPaciente('${p.id}')">
                     <div class="paciente-header">
                         <div class="paciente-nombre">${p.nombre}</div>
-                        <div class="paciente-fecha">Inicio: ${p.fechaInicio ? new Date(p.fechaInicio).toLocaleDateString('es-AR', {day: '2-digit', month: '2-digit', year: 'numeric'}) : 'No especificada'}</div>
+                        <div class="paciente-fecha">Inicio: ${p.fechaInicio ? formatearFecha(p.fechaInicio) : 'No especificada'}</div>
                         <div class="paciente-credenciales" onclick="verCredenciales('${p.id}', event)">🔐 Credenciales</div>
                     </div>
                     <div class="paciente-body">
