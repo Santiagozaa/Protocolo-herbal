@@ -455,8 +455,10 @@
             tipoLoginActual = tipo;
             document.getElementById('btn-tipo-admin').classList.toggle('activo', tipo === 'admin');
             document.getElementById('btn-tipo-paciente').classList.toggle('activo', tipo === 'paciente');
-            document.getElementById('login-info-admin').style.display = tipo === 'admin' ? 'block' : 'none';
-            document.getElementById('login-info-paciente').style.display = tipo === 'paciente' ? 'block' : 'none';
+            var infoAdmin = document.getElementById('login-info-admin');
+            var infoPaciente = document.getElementById('login-info-paciente');
+            if (infoAdmin) infoAdmin.style.display = tipo === 'admin' ? 'block' : 'none';
+            if (infoPaciente) infoPaciente.style.display = tipo === 'paciente' ? 'block' : 'none';
             document.getElementById('login-error').classList.remove('visible');
         }
         
