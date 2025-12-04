@@ -818,7 +818,8 @@
                 return `<div class="paciente-card" onclick="abrirPaciente('${p.id}')">
                     <div class="paciente-header">
                         <div class="paciente-nombre">${p.nombre}</div>
-                        <div class="paciente-fecha">Inicio: ${p.fechaInicio ? formatearFecha(p.fechaInicio) : 'No especificada'}</div>
+                        <div class="paciente-fecha">Inicio: ${formatearFecha(p.fechaInicio) || 'No especificada'}</div>
+                        
                         <div class="paciente-credenciales" onclick="verCredenciales('${p.id}', event)">🔐 Credenciales</div>
                     </div>
                     <div class="paciente-body">
