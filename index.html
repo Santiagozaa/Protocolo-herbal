@@ -778,8 +778,17 @@
             renderizarLista();
         }
         
+
         function renderizarPlan(modoLectura = false) {
+            // Guardar acordeones abiertos
+            const acordeonesAbiertos = [];
+            document.querySelectorAll('.acordeon.abierto').forEach(a => {
+                const clase = Array.from(a.classList).find(c => c.startsWith('fase-'));
+                if (clase) acordeonesAbiertos.push(clase);
+            });
+            
             const container = document.getElementById('plan-container');
+            
             const p = pacienteActual, plan = p.plan;
             container.className = `plan-container ${modoLectura ? 'modo-lectura' : ''}`;
             const badge = modoLectura ? '<span class="badge-lectura">Solo lectura</span>' : '';
@@ -821,6 +830,13 @@
                 </div>
             `;
             for (let i = 1; i <= 4; i++) actualizarPorcentajeUI(i);
+                        
+                        // Restaurar acordeones abiertos
+                        acordeonesAbiertos.forEach(clase => {
+                            const acordeon = document.querySelector('.' + clase);
+                            if (acordeon) acordeon.classList.add('abierto');
+                        });
+                    }
         }
         
         function renderizarFases(plan, modoLectura) {
