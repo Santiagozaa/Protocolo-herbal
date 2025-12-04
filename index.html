@@ -720,8 +720,12 @@
         }
         
         async function abrirPaciente(id) {
-            pacienteActual = pacientes.find(p => p.id === id);
-            if (!pacienteActual) return;
+            pacienteActual = pacientes.find(p => p.id === id || p.id === String(id));
+            if (!pacienteActual) {
+                console.log('No se encontró paciente con id:', id);
+                console.log('IDs disponibles:', pacientes.map(p => p.id));
+                return;
+            }
             document.getElementById('vista-lista').classList.add('oculta');
             document.getElementById('vista-plan').classList.add('visible');
             document.getElementById('btn-volver').style.display = 'flex';
