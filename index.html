@@ -817,7 +817,14 @@
         function actualizarDato(k, v) { pacienteActual[k] = v; }
         function actualizarFase(i, k, v) { if (k === 'duracion') v = parseInt(v) || 0; pacienteActual.plan.fases[i][k] = v; }
         function actualizarHierba(i, j, k, v) { pacienteActual.plan.fases[i].hierbas[j][k] = v; }
-        function agregarHierba(i) { pacienteActual.plan.fases[i].hierbas.push({ nombre: '', dosis: '', frecuencia: '' }); renderizarPlan(false); }
+        
+        function agregarHierba(i) {
+            pacienteActual.plan.fases[i].hierbas.push({ nombre: '', dosis: '', frecuencia: '' });
+            renderizarPlan(false);
+            document.querySelector('.fase-' + i + ' .acordeon-header').parentElement.classList.add('abierto');
+            document.querySelector('.fase-' + i + ' .acordeon-header').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        
         function eliminarHierba(i, j) { if (pacienteActual.plan.fases[i].hierbas.length > 1) { pacienteActual.plan.fases[i].hierbas.splice(j, 1); renderizarPlan(false); } }
         function actualizarRec(i, v) { pacienteActual.plan.recomendaciones[i] = v; }
         function agregarRec() { pacienteActual.plan.recomendaciones.push(''); renderizarPlan(false); }
