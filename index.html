@@ -247,6 +247,11 @@
             .flecha { transform: rotate(90deg); }
             .login-tipo { flex-direction: column; }
         }
+        
+        .fase-info input[type="date"] { position: absolute; opacity: 0; pointer-events: none; }
+        .fase-info > div { position: relative; }
+        .fecha-formateada { font-size: 15px; font-weight: 500; }
+        
     </style>
 </head>
 <body>
@@ -802,8 +807,8 @@
                         <div class="objetivo"><strong>Objetivo:</strong><textarea ${modoLectura ? 'readonly' : `onchange="actualizarFase(${i}, 'objetivo', this.value)"`}>${f.objetivo}</textarea></div>
                         <div class="fase-info">
                             <div><label>Duración (días)</label><input type="number" value="${f.duracion}" ${modoLectura ? 'readonly' : `onchange="actualizarFase(${i}, 'duracion', this.value); actualizarPorcentajeUI(${i})"`}></div>
-                            <div><label>Fecha inicio</label><input type="date" id="fi-${i}" value="${f.fechaInicio}" ${modoLectura ? 'readonly' : `onchange="actualizarFase(${i}, 'fechaInicio', this.value); actualizarPorcentajeUI(${i})"`}></div>
-                            <div><label>Fecha fin</label><input type="date" id="ff-${i}" value="${f.fechaFin}" ${modoLectura ? 'readonly' : ''}></div>
+                            <div><label>Fecha inicio</label><input type="date" id="fi-${i}" value="${f.fechaInicio}" ${modoLectura ? 'readonly' : `onchange="actualizarFase(${i}, 'fechaInicio', this.value); actualizarPorcentajeUI(${i})"`}><span class="fecha-formateada">${formatearFecha(f.fechaInicio)}</span></div>
+                            <div><label>Fecha fin</label><input type="date" id="ff-${i}" value="${f.fechaFin}" ${modoLectura ? 'readonly' : ''}><span class="fecha-formateada">${formatearFecha(f.fechaFin)}</span></div>
                             <div><label>Estado</label><input value="${f.estado}" ${modoLectura ? 'readonly' : `onchange="actualizarFase(${i}, 'estado', this.value)"`}></div>
                         </div>
                         <p class="hierbas-titulo">Hierbas:</p>
@@ -829,6 +834,16 @@
             document.querySelector('.fase-' + i + ' .acordeon-header').scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
         
+        function formatearFecha(fecha) {
+            if (!fecha) return '';
+            const partes = fecha.split('-');
+            if (partes.length === 3) {
+                return partes[2] + '/' + partes[1] + '/' + partes[0];
+            }
+            return fecha;
+        }
+
+
         function eliminarHierba(i, j) { if (pacienteActual.plan.fases[i].hierbas.length > 1) { pacienteActual.plan.fases[i].hierbas.splice(j, 1); renderizarPlan(false); } }
         function actualizarRec(i, v) { pacienteActual.plan.recomendaciones[i] = v; }
         function agregarRec() { pacienteActual.plan.recomendaciones.push(''); renderizarPlan(false); }
