@@ -249,7 +249,8 @@
         }
         
         
-        .campo-fecha { position: relative; display: inline-block; width: 100%; }
+        
+        .campo-fecha { position: relative; display: block; width: 100%; min-height: 32px; }
         .campo-fecha input[type="date"] { 
             position: absolute; 
             top: 0; 
@@ -258,7 +259,7 @@
             height: 100%; 
             opacity: 0; 
             cursor: pointer;
-            z-index: 2;
+            z-index: 10;
         }
         .campo-fecha .fecha-formateada { 
             font-size: 15px; 
@@ -267,6 +268,7 @@
             min-height: 24px;
             padding: 4px 0;
             cursor: pointer;
+            pointer-events: none;
         }
         
     </style>
